@@ -1,22 +1,5 @@
 {
     "name": "root",
     "node_type": "folder",
-    "children": [
-        {
-            "name": "Documents",
-            "node_type": "folder",
-            "children": [
-                {
-                    "name": "notes.txt",
-                    "node_type": "file",
-                    "content": ""
-                }
-            ]
-        },
-        {
-            "name": "Pictures",
-            "node_type": "folder",
-            "children": []
-        }
-    ]
+    "children": []
 }
