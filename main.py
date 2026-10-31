@@ -3,8 +3,10 @@ import os
 from filesystem import FileSystem
 
 fs = FileSystem()
+fs.load()
 
 def help():
+    print("tree")
     print("create_folder <name>")
     print("create_file <name>")
     print("open <file_name>")
@@ -39,6 +41,7 @@ def main():
         parts = command.split()
         
         if command == "logout":
+            fs.save()
             sys.exit()
             
         elif not parts:
@@ -82,6 +85,9 @@ def main():
         
         elif parts[0] == "help" and len(parts) == 1:
             help()
+        
+        elif parts[0] == "tree" and len(parts) == 1:
+            fs.tree()
             
         elif parts[0] == "clear" and len(parts) == 1:
             os.system("cls" if os.name == "nt" else "clear")

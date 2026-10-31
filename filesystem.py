@@ -1,3 +1,4 @@
+import json
 from node import Node
 
 class FileSystem:
@@ -143,3 +144,67 @@ class FileSystem:
         
         else:
             print("File or folder not found")
+            
+    def node_to_dict(self,node):
+        data = {
+            "name":node.name,
+            "node_type":node.node_type
+        }
+        
+        if node.node_type == "file":
+            data["content"] = node.content
+        else:
+            data["children"] = []
+            
+            for child in node.children:
+                data["children"].append(self.node_to_dict(child))
+        return data
+        
+    
+    def save(self):
+        data = self.node_to_dict(self.root)
+        
+        with open("filesystem.json","w") as file:
+            json.dump(data,file,indent=4)
+            
+    def dict_to_node(self,data,parent = None):
+        node = Node(data["name"],data["node_type"])
+        node.parent = parent
+        
+        if node.node_type == "file":
+            node.content = data["content"]
+        else:
+            for child_data in data["children"]:
+                child = self.dict_to_node(child_data,node)
+                node.children.append(child)
+        
+        return node
+    
+    def load(self):
+        try:
+            with open("filesystem.json","r") as file:
+                data = json.load(file)
+                
+                self.root = self.dict_to_node(data)
+                self.current = self.root
+        
+        except FileNotFoundError:
+            pass
+        
+    def tree(self, node=None, level=0):
+        if node is None:
+            node = self.root
+
+        if level == 0:
+            print("📁", node.name)
+
+        for child in node.children:
+            if child.node_type == "folder":
+                icon = "📁"
+            else:
+                icon = "📄"
+
+            print("    " * level + "└── " + icon + " " + child.name)
+
+            if child.node_type == "folder":
+                self.tree(child, level + 1)
